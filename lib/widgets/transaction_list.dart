@@ -1,33 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
-  TransactionList({super.key});
+  final List<TransactionModel> transactions;
 
-  final List<TransactionModel> transactions = [
-    TransactionModel(
-      id: 1,
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    TransactionModel(
-      id: 2,
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-    ),
-    TransactionModel(
-      id: 3,
-      title: 'New Shoes',
-      amount: 50.99,
-      date: DateTime.now(),
-    ),
-  ];
+  const TransactionList({super.key, required this.transactions});
 
   @override
   Widget build(BuildContext context) {
