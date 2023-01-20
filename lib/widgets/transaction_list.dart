@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../helpers/utils.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<TransactionModel> transactions;
 
   const TransactionList({super.key, required this.transactions});
-
-  Color getTypeColor(TransactionType transactionType) {
-    if (transactionType == TransactionType.income) {
-      return Colors.green;
-    }
-
-    return Colors.red;
-  }
 
   @override
   Widget build(BuildContext context) {

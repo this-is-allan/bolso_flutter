@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:bolso_taller/widgets/transaction_amount_card.dart';
 import 'package:bolso_taller/widgets/transaction_form.dart';
 import 'package:flutter/material.dart';
 
@@ -39,24 +40,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   void _addNewTransaction(
-      String txTitle, double txAmount, TransactionType transactionType) {
-    final newTx = TransactionModel(
+      String title, double amount, TransactionType transactionType) {
+    final newTransaction = TransactionModel(
       id: DateTime.now().millisecondsSinceEpoch,
-      title: txTitle,
-      amount: txAmount,
+      title: title,
+      amount: amount,
       date: DateTime.now(),
       transactionType: transactionType,
     );
 
     setState(() {
-      transactions.add(newTx);
+      transactions.add(newTransaction);
     });
 
     log('New transaction added');
   }
 
-  void _startAddNewTransaction(
-      BuildContext ctx, TransactionType transactionType) {
+  void _createTransaction(BuildContext ctx, TransactionType transactionType) {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
@@ -67,6 +67,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  double get totalOutcomes {
+    return transactions
+        .where((transaction) =>
+            transaction.transactionType == TransactionType.outcome)
+        .fold(0.0, (sum, transaction) => sum + transaction.amount);
+  }
+
+  double get totalIncomes {
+    return transactions
+        .where((transaction) =>
+            transaction.transactionType == TransactionType.income)
+        .fold(0.0, (sum, transaction) => sum + transaction.amount);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +89,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Column(
         children: [
-          // Chart(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TransactionAmountCard(
+                    amount: totalIncomes,
+                    transactionType: TransactionType.income),
+                TransactionAmountCard(
+                    amount: totalOutcomes,
+                    transactionType: TransactionType.outcome),
+              ],
+            ),
+          ),
           Expanded(
             child: TransactionList(transactions: transactions),
           ),
@@ -87,14 +114,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         children: [
           FloatingActionButton(
             onPressed: () =>
-                _startAddNewTransaction(context, TransactionType.income),
+                _createTransaction(context, TransactionType.income),
             backgroundColor: Colors.green,
             child: const Icon(Icons.add),
           ),
           const SizedBox(width: 10),
           FloatingActionButton(
             onPressed: () =>
-                _startAddNewTransaction(context, TransactionType.outcome),
+                _createTransaction(context, TransactionType.outcome),
             backgroundColor: Colors.red,
             child: const Icon(Icons.remove),
           ),

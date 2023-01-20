@@ -38,6 +38,7 @@ dependencies:
   intl: ^0.18.0
   extended_masked_text: ^2.3.1
   currency_text_input_formatter: ^2.1.8
+  syncfusion_flutter_charts: ^20.4.44
 
 dependency_overrides:
   intl: ^0.18.0
