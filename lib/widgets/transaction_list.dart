@@ -8,57 +8,69 @@ class TransactionList extends StatelessWidget {
 
   const TransactionList({super.key, required this.transactions});
 
+  Color getTypeColor(TransactionType transactionType) {
+    if (transactionType == TransactionType.income) {
+      return Colors.green;
+    }
+
+    return Colors.red;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(
-            child: Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 15,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  child: Text(
-                    '\$${transactions[index].amount}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Theme.of(context).primaryColor,
-                    ),
+    return ListView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        final amountFormatted = NumberFormat.currency(
+          locale: 'pt_BR',
+          symbol: 'R\$',
+          decimalDigits: 2,
+        ).format(transactions[index].amount);
+
+        return Card(
+          child: Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 15,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: getTypeColor(transactions[index].transactionType),
+                    width: 2,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      transactions[index].title,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    Text(
-                      DateFormat.yMMMd().format(transactions[index].date),
-                      style: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  amountFormatted,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: getTypeColor(transactions[index].transactionType),
+                  ),
                 ),
-              ],
-            ),
-          );
-        },
-        itemCount: transactions.length,
-      ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    transactions[index].title,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Text(
+                    DateFormat.yMMMd().format(transactions[index].date),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
